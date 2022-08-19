@@ -73,7 +73,7 @@ def display(display_list):
 
 for image, mask in train.take(1):
     sample_image, sample_mask = image, mask
-display([sample_image, sample_mask])
+# display([sample_image, sample_mask])
 
 OUTPUT_CHANNELS = 3
 
@@ -160,13 +160,13 @@ def show_predictions(dataset=None, num=1):
         )
 
 
-show_predictions()
+# show_predictions()
 
 
 class DisplayCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         clear_output(wait=True)
-        show_predictions()
+        # show_predictions()
         print("\n에포크 이후 예측 예시 {}\n".format(epoch + 1))
 
 

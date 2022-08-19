@@ -172,11 +172,13 @@ dependencies:
     - absl-py==1.2.0
     - astunparse==1.6.3
     - cachetools==5.2.0
+    - etils==0.7.1
     - flatbuffers==1.12
     - gast==0.4.0
     - google-auth==2.10.0
     - google-auth-oauthlib==0.4.6
     - google-pasta==0.2.0
+    - googleapis-common-protos==1.56.4
     - importlib-metadata==4.12.0
     - keras==2.9.0
     - keras-preprocessing==1.1.2
@@ -184,6 +186,7 @@ dependencies:
     - markdown==3.4.1
     - oauthlib==3.2.0
     - opt-einsum==3.3.0
+    - promise==2.3
     - protobuf==3.19.4
     - pyasn1==0.4.8
     - pyasn1-modules==0.2.8
@@ -193,9 +196,13 @@ dependencies:
     - tensorboard-data-server==0.6.1
     - tensorboard-plugin-wit==1.8.1
     - tensorflow-estimator==2.9.0
+    - tensorflow-examples==2511b3b28a72ab2ee0fc01a448689d7286d6bed8-
     - tensorflow-macos==2.9.2
+    - tensorflow-metadata==1.9.0
     - tensorflow-metal==0.5.1
     - termcolor==1.1.0
+    - tfds-nightly==4.6.0.dev202208190045
+    - toml==0.10.2
+    - tqdm==4.64.0
     - werkzeug==2.2.2
-    - wrapt==1.14.1
 prefix: /opt/homebrew/Caskroom/miniforge/base/envs/tf
