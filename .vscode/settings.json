@@ -5,7 +5,6 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
-    "python.pythonPath": "/opt/homebrew/Caskroom/miniforge/base/envs/tf/bin/python",
     "[python]": {
         "editor.defaultFormatter": "ms-python.python"
     }
