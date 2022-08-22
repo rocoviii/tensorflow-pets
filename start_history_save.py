@@ -1,4 +1,7 @@
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
 import tensorflow as tf
+import numpy as np
 
 from tensorflow_examples.models.pix2pix import pix2pix
 
@@ -6,12 +9,10 @@ import tensorflow_datasets as tfds
 
 tfds.disable_progress_bar()
 
-from IPython.display import clear_output
-import matplotlib.pyplot as plt
-
 
 data_dir = "./data"
-dataset, info = tfds.load("oxford_iiit_pet:3.*.*", with_info=True, data_dir=data_dir)
+dataset, info = tfds.load("oxford_iiit_pet:3.*.*",
+                          with_info=True, data_dir=data_dir)
 
 
 def normalize(input_image, input_mask):
@@ -48,13 +49,21 @@ BATCH_SIZE = 64
 BUFFER_SIZE = 1000
 STEPS_PER_EPOCH = TRAIN_LENGTH // BATCH_SIZE
 
+# 머신 러닝의 궁극적인 목표는 training dataset을 이용하여 학습한 모델을 가지고 test dataset를 예측하는 것이다.
+# 이 때 test dataset은 학습 과정에서 참조할 수 없다고 가정하기 때문에
+# 머신 러닝 모델은 training dataset만을 가지고 test dataset을 잘 예측하도록 학습되어야 한다.
+
 train = dataset["train"].map(
     load_image_train, num_parallel_calls=tf.data.experimental.AUTOTUNE
 )
 test = dataset["test"].map(load_image_test)
 
+# 주어진 dataset을 training, validation, test dataset들로 나눈다.
+# 일반적으로 각 dataset의 비율은 60:20:20으로 설정
+
 train_dataset = train.cache().shuffle(BUFFER_SIZE).batch(BATCH_SIZE).repeat()
-train_dataset = train_dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+train_dataset = train_dataset.prefetch(
+    buffer_size=tf.data.experimental.AUTOTUNE)
 test_dataset = test.batch(BATCH_SIZE)
 
 
@@ -136,7 +145,7 @@ model.compile(
     metrics=["accuracy"],
 )
 
-
+# 모델 시각화
 tf.keras.utils.plot_model(model, show_shapes=True)
 
 
@@ -163,7 +172,7 @@ def show_predictions(dataset=None, num=1):
 
 # show_predictions()
 
-### 훈련 단계
+# 훈련 단계
 class DisplayCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         clear_output(wait=True)
@@ -175,6 +184,12 @@ EPOCHS = 20
 VAL_SUBSPLITS = 5
 VALIDATION_STEPS = info.splits["test"].num_examples // BATCH_SIZE // VAL_SUBSPLITS
 
+# CSVLOGGER 콜백 생성
+# 훈련 기록을 저장하기 위한 설정
+filename = 'log.csv'
+history_logger = tf.keras.callbacks.CSVLogger(
+    filename, separator=",", append=True)
+
 # 훈련 실행
 model_history = model.fit(
     train_dataset,
@@ -182,15 +197,20 @@ model_history = model.fit(
     steps_per_epoch=STEPS_PER_EPOCH,
     validation_steps=VALIDATION_STEPS,
     validation_data=test_dataset,
-    callbacks=[DisplayCallback()],
+    callbacks=[DisplayCallback(), history_logger],
 )
 
-
+np.save('history1.npy', model_history.history)
+# training loss - 훈련 손실
+# validation loss - 검증 손실
 loss = model_history.history["loss"]
 val_loss = model_history.history["val_loss"]
 
+
 epochs = range(EPOCHS)
 
+# 훈련 결과 차트 출력
+# 차트 이해하기 https://untitledtblog.tistory.com/158
 plt.figure()
 plt.plot(epochs, loss, "r", label="Training loss")
 plt.plot(epochs, val_loss, "bo", label="Validation loss")
